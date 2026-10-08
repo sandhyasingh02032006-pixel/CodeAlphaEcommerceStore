@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Products - CodeAlpha Store
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        nav {
+
+            background: #222;
+
+            color: white;
+
+            padding: 15px 40px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 15px;
+
+        }
+
+
+        nav h2 {
+
+            color: #ff9800;
+
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .nav-links a {
+
+            color: white;
+
+            text-decoration: none;
+
+        }
+
+
+        .nav-links a:hover {
+
+            color: #ff9800;
+
+        }
+
+
+        /* =========================
+           USER AREA
+        ========================= */
+
+        #userArea {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+
+        #userName {
+
+            color: #ffcc80;
+
+            font-weight: bold;
+
+        }
+
+
+        .logout-btn {
+
+            background: #e53935;
+
+            color: white;
+
+            border: none;
+
+            padding: 8px 14px;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+        }
+
+
+        .logout-btn:hover {
+
+            background: #c62828;
+
+        }
+
+
+        /* =========================
+           CONTAINER
+        ========================= */
+
+        .container {
+
+            width: 90%;
+
+            max-width: 1200px;
+
+            margin: 40px auto;
+
+        }
+
+
+        h1 {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        /* =========================
+           PRODUCTS
+        ========================= */
+
+        #productsContainer {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 25px;
+
+        }
+
+
+        .product-card {
+
+            background: white;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 3px 10px
+                rgba(0, 0, 0, 0.1);
+
+            transition:
+                transform 0.2s;
+
+        }
+
+
+        .product-card:hover {
+
+            transform:
+                translateY(-5px);
+
+        }
+
+
+        .product-image {
+
+            width: 100%;
+
+            height: 180px;
+
+            background: #eee;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .product-image img {
+
+            max-width: 90%;
+
+            max-height: 170px;
+
+            object-fit: contain;
+
+        }
+
+
+        .product-card h3 {
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .category {
+
+            color: #777;
+
+            font-size: 14px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .description {
+
+            color: #666;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .price {
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            color: #e65100;
+
+            margin: 10px 0;
+
+        }
+
+
+        .stock {
+
+            color: green;
+
+            font-size: 14px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .buttons {
+
+            display: flex;
+
+            gap: 10px;
+
+        }
+
+
+        button {
+
+            border: none;
+
+            padding: 10px 15px;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+        }
+
+
+        .cart-btn {
+
+            background: #ff9800;
+
+            color: white;
+
+            flex: 1;
+
+        }
+
+
+        .cart-btn:hover {
+
+            background: #e68900;
+
+        }
+
+
+        .details-btn {
+
+            background: #222;
+
+            color: white;
+
+            flex: 1;
+
+        }
+
+
+        .details-btn:hover {
+
+            background: #444;
+
+        }
+
+
+        .loading {
+
+            text-align: center;
+
+            font-size: 20px;
+
+            grid-column: 1 / -1;
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            #productsContainer {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            nav {
+
+                padding: 15px;
+
+            }
+
+
+            .container {
+
+                width: 95%;
+
+            }
+
+
+            #productsContainer {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .nav-links {
+
+                gap: 10px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         NAVBAR
+    ========================= -->
+
+    <nav>
+
+        <h2>
+            CodeAlpha Store
+        </h2>
+
+
+        <div class="nav-links">
+
+            <a href="products.html">
+                Products
+            </a>
+
+
+            <a href="cart.html">
+                Cart
+            </a>
+
+
+            <a href="orders.html">
+                My Orders
+            </a>
+
+
+            <div id="userArea">
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================
+         PRODUCTS
+    ========================= -->
+
+    <div class="container">
+
+        <h1>
+            Our Products
+        </h1>
+
+
+        <div id="productsContainer">
+
+            <p class="loading">
+
+                Loading products...
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // =========================================
+        // GET CURRENT USER
+        // =========================================
+
+        function getCurrentUser() {
+
+            const localUser =
+                localStorage.getItem("user");
+
+
+            const sessionUser =
+                sessionStorage.getItem("user");
+
+
+            const savedUser =
+                localUser ||
+                sessionUser;
+
+
+            if (!savedUser) {
+
+                return null;
+
+            }
+
+
+            try {
+
+                return JSON.parse(
+                    savedUser
+                );
+
+            } catch (error) {
+
+                console.log(
+                    "Invalid user data"
+                );
+
+                return null;
+
+            }
+
+        }
+
+
+        // =========================================
+        // DISPLAY USER
+        // =========================================
+
+        function displayUser() {
+
+            const userArea =
+                document.getElementById(
+                    "userArea"
+                );
+
+
+            const user =
+                getCurrentUser();
+
+
+            if (user) {
+
+                userArea.innerHTML = `
+
+                    <span id="userName">
+
+                        Hi, ${user.name}
+
+                    </span>
+
+
+                    <button
+                        class="logout-btn"
+                        onclick="logout()"
+                    >
+
+                        Logout
+
+                    </button>
+
+                `;
+
+            } else {
+
+                userArea.innerHTML = `
+
+                    <a href="login.html">
+
+                        Login
+
+                    </a>
+
+
+                    <a href="register.html">
+
+                        Register
+
+                    </a>
+
+                `;
+
+            }
+
+        }
+
+
+        // =========================================
+        // LOGOUT
+        // =========================================
+
+        function logout() {
+
+            localStorage.removeItem(
+                "user"
+            );
+
+
+            sessionStorage.removeItem(
+                "user"
+            );
+
+
+            alert(
+                "You have been logged out."
+            );
+
+
+            window.location.href =
+                "products.html";
+
+        }
+
+
+        // =========================================
+        // LOAD PRODUCTS
+        // =========================================
+
+        async function loadProducts() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/products"
+                    );
+
+
+                const products =
+                    await response.json();
+
+
+                const container =
+                    document.getElementById(
+                        "productsContainer"
+                    );
+
+
+                container.innerHTML =
+                    "";
+
+
+                if (
+                    products.length === 0
+                ) {
+
+                    container.innerHTML = `
+
+                        <p class="loading">
+
+                            No products available.
+
+                        </p>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                products.forEach(
+                    product => {
+
+                        const card =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        card.className =
+                            "product-card";
+
+
+                        card.innerHTML = `
+
+                            <div
+                                class="product-image"
+                            >
+
+                                ${
+                                    product.image
+                                    ?
+                                    `
+                                    <img
+                                        src="${product.image}"
+                                        alt="${product.name}"
+                                        onerror="
+                                            this.style.display='none'
+                                        "
+                                    >
+                                    `
+                                    :
+                                    `
+                                    <span>
+                                        No Image
+                                    </span>
+                                    `
+                                }
+
+                            </div>
+
+
+                            <h3>
+
+                                ${product.name}
+
+                            </h3>
+
+
+                            <p class="category">
+
+                                Category:
+                                ${product.category}
+
+                            </p>
+
+
+                            <p class="description">
+
+                                ${product.description}
+
+                            </p>
+
+
+                            <div class="price">
+
+                                ₹${product.price}
+
+                            </div>
+
+
+                            <p class="stock">
+
+                                Stock:
+                                ${product.stock}
+
+                            </p>
+
+
+                            <div class="buttons">
+
+
+                                <button
+                                    class="cart-btn"
+                                    onclick="
+                                        addToCart(
+                                            ${product.id}
+                                        )
+                                    "
+                                >
+
+                                    Add to Cart
+
+                                </button>
+
+
+                                <button
+                                    class="details-btn"
+                                    onclick="
+                                        viewDetails(
+                                            ${product.id}
+                                        )
+                                    "
+                                >
+
+                                    View Details
+
+                                </button>
+
+
+                            </div>
+
+                        `;
+
+
+                        container.appendChild(
+                            card
+                        );
+
+                    }
+                );
+
+            } catch (error) {
+
+                console.log(error);
+
+
+                document.getElementById(
+                    "productsContainer"
+                ).innerHTML = `
+
+                    <p class="loading">
+
+                        Failed to load products.
+
+                    </p>
+
+                `;
+
+            }
+
+        }
+
+
+        // =========================================
+        // ADD TO CART
+        // =========================================
+
+        async function addToCart(
+            productId
+        ) {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/products"
+                    );
+
+
+                const products =
+                    await response.json();
+
+
+                const product =
+                    products.find(
+                        p =>
+                            p.id == productId
+                    );
+
+
+                if (!product) {
+
+                    alert(
+                        "Product not found!"
+                    );
+
+                    return;
+
+                }
+
+
+                let cart =
+                    JSON.parse(
+                        localStorage.getItem(
+                            "cart"
+                        )
+                    ) || [];
+
+
+                const existingProduct =
+                    cart.find(
+                        item =>
+                            item.id ===
+                            product.id
+                    );
+
+
+                if (
+                    existingProduct
+                ) {
+
+                    existingProduct.quantity++;
+
+                } else {
+
+                    cart.push({
+
+                        id:
+                            product.id,
+
+                        name:
+                            product.name,
+
+                        price:
+                            product.price,
+
+                        quantity:
+                            1
+
+                    });
+
+                }
+
+
+                localStorage.setItem(
+                    "cart",
+                    JSON.stringify(cart)
+                );
+
+
+                alert(
+                    product.name +
+                    " added to cart!"
+                );
+
+            } catch (error) {
+
+                console.log(error);
+
+
+                alert(
+                    "Unable to add product to cart."
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // PRODUCT DETAILS
+        // =========================================
+
+        function viewDetails(
+            productId
+        ) {
+
+            window.location.href =
+                `product.html?id=${productId}`;
+
+        }
+
+
+        // =========================================
+        // START PAGE
+        // =========================================
+
+        displayUser();
+
+        loadProducts();
+
+    </script>
+
+
+</body>
+
+</html>

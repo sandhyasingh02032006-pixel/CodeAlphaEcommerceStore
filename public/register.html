@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>ShopEase - Register</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+
+            min-height: 100vh;
+
+            display: flex;
+            flex-direction: column;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eee9ff,
+                    #f8f6ff
+                );
+        }
+
+        .navbar {
+            height: 70px;
+
+            background: white;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 0 8%;
+
+            box-shadow:
+                0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: bold;
+            color: #6c5ce7;
+        }
+
+        nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        nav a:hover {
+            color: #6c5ce7;
+        }
+
+        .register-container {
+
+            flex: 1;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 40px 20px;
+        }
+
+        .register-box {
+
+            width: 100%;
+
+            max-width: 430px;
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(0,0,0,0.10);
+        }
+
+        .register-box h1 {
+
+            text-align: center;
+
+            margin-bottom: 10px;
+
+        }
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #777;
+
+            margin-bottom: 30px;
+
+        }
+
+        .form-group {
+
+            margin-bottom: 18px;
+
+        }
+
+        .form-group label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-weight: 600;
+
+        }
+
+        .form-group input {
+
+            width: 100%;
+
+            padding: 12px 14px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 15px;
+
+        }
+
+        .form-group input:focus {
+
+            border-color: #6c5ce7;
+
+        }
+
+        .register-btn {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #6c5ce7;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            margin-top: 5px;
+        }
+
+        .register-btn:hover {
+
+            background: #5848c7;
+
+        }
+
+        .message {
+
+            text-align: center;
+
+            margin-top: 18px;
+
+            font-size: 14px;
+
+        }
+
+        .login-link {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #666;
+
+        }
+
+        .login-link a {
+
+            color: #6c5ce7;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+        }
+
+        footer {
+
+            background: #222;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 20px;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="navbar">
+
+    <div class="logo">
+        ShopEase
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="products.html">
+            Products
+        </a>
+
+        <a href="cart.html">
+            🛒 Cart
+        </a>
+
+        <a href="login.html">
+            Login
+        </a>
+
+    </nav>
+
+</header>
+
+
+<section class="register-container">
+
+    <div class="register-box">
+
+        <h1>
+            Create Account 👤
+        </h1>
+
+        <p class="subtitle">
+            Join ShopEase today
+        </p>
+
+
+        <form id="registerForm">
+
+
+            <div class="form-group">
+
+                <label for="name">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter your name"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Create a password"
+                    required>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="register-btn">
+
+                Create Account
+
+            </button>
+
+
+        </form>
+
+
+        <div
+            id="message"
+            class="message">
+        </div>
+
+
+        <div class="login-link">
+
+            Already have an account?
+
+            <a href="login.html">
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>
+        © 2026 ShopEase | CodeAlpha Internship Project
+    </p>
+
+</footer>
+
+
+<script>
+
+const form =
+    document.getElementById(
+        "registerForm"
+    );
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+form.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const name =
+            document.getElementById(
+                "name"
+            ).value.trim();
+
+
+        const email =
+            document.getElementById(
+                "email"
+            ).value.trim();
+
+
+        const password =
+            document.getElementById(
+                "password"
+            ).value;
+
+
+        message.textContent =
+            "Creating account...";
+
+        message.style.color =
+            "#666";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/register",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            name,
+                            email,
+                            password
+                        })
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (response.ok) {
+
+                message.textContent =
+                    "✅ Account created successfully!";
+
+                message.style.color =
+                    "#27ae60";
+
+
+                form.reset();
+
+
+                setTimeout(
+                    () => {
+
+                        window.location.href =
+                            "login.html";
+
+                    },
+                    1500
+                );
+
+
+            } else {
+
+                message.textContent =
+                    "❌ " + data.message;
+
+                message.style.color =
+                    "#e74c3c";
+
+            }
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            message.textContent =
+                "❌ Server connection failed.";
+
+            message.style.color =
+                "#e74c3c";
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

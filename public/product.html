@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Product Details - CodeAlpha Store</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        nav {
+            background: #222;
+            color: white;
+            padding: 15px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h2 {
+            color: #ff9800;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        nav a:hover {
+            color: #ff9800;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 50px auto;
+        }
+
+        .product-details {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+
+            display: flex;
+            gap: 40px;
+
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 45%;
+            min-height: 300px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .product-image img {
+            max-width: 90%;
+            max-height: 300px;
+            object-fit: contain;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-info h1 {
+            margin-bottom: 15px;
+        }
+
+        .category {
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .description {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e65100;
+            margin-bottom: 15px;
+        }
+
+        .stock {
+            margin-bottom: 20px;
+            color: green;
+        }
+
+        .btn {
+            background: #ff9800;
+            color: white;
+
+            border: none;
+            padding: 12px 25px;
+
+            border-radius: 6px;
+            cursor: pointer;
+
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: #e68900;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 20px;
+
+            color: #333;
+            text-decoration: none;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        @media (max-width: 700px) {
+
+            nav {
+                padding: 15px;
+            }
+
+            .product-details {
+                flex-direction: column;
+            }
+
+            .product-image {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <nav>
+
+        <h2>CodeAlpha Store</h2>
+
+        <div>
+
+            <a href="products.html">Products</a>
+            <a href="cart.html">Cart</a>
+            <a href="orders.html">My Orders</a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="container">
+
+        <a href="products.html" class="back">
+            ← Back to Products
+        </a>
+
+        <div id="productContainer">
+
+            <p class="loading">
+                Loading product...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // Get product ID from URL
+        const params = new URLSearchParams(
+            window.location.search
+        );
+
+        const productId = params.get("id");
+
+
+        // Check product ID
+        if (!productId) {
+
+            document.getElementById(
+                "productContainer"
+            ).innerHTML = `
+                <p class="loading">
+                    Product not found.
+                </p>
+            `;
+
+        } else {
+
+            loadProduct();
+
+        }
+
+
+        // Load product
+        async function loadProduct() {
+
+            try {
+
+                const response =
+                    await fetch("/api/products");
+
+                const products =
+                    await response.json();
+
+                const product =
+                    products.find(
+                        p => p.id == productId
+                    );
+
+
+                if (!product) {
+
+                    document.getElementById(
+                        "productContainer"
+                    ).innerHTML = `
+                        <p class="loading">
+                            Product not found.
+                        </p>
+                    `;
+
+                    return;
+                }
+
+
+                document.getElementById(
+                    "productContainer"
+                ).innerHTML = `
+
+                    <div class="product-details">
+
+                        <div class="product-image">
+
+                            ${
+                                product.image
+                                ?
+                                `<img
+                                    src="${product.image}"
+                                    alt="${product.name}"
+                                    onerror="this.style.display='none'"
+                                >`
+                                :
+                                `<span>No Image</span>`
+                            }
+
+                        </div>
+
+
+                        <div class="product-info">
+
+                            <h1>
+                                ${product.name}
+                            </h1>
+
+                            <p class="category">
+
+                                Category:
+                                ${product.category}
+
+                            </p>
+
+
+                            <p class="description">
+
+                                ${product.description}
+
+                            </p>
+
+
+                            <div class="price">
+
+                                ₹${product.price}
+
+                            </div>
+
+
+                            <p class="stock">
+
+                                Available Stock:
+                                ${product.stock}
+
+                            </p>
+
+
+                            <button
+                                class="btn"
+                                onclick='addToCart(${JSON.stringify(product)})'
+                            >
+
+                                Add to Cart
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            } catch (error) {
+
+                console.log(error);
+
+                document.getElementById(
+                    "productContainer"
+                ).innerHTML = `
+
+                    <p class="loading">
+
+                        Failed to load product.
+
+                    </p>
+
+                `;
+
+            }
+
+        }
+
+
+        // Add product to cart
+        function addToCart(product) {
+
+            let cart =
+                JSON.parse(
+                    localStorage.getItem("cart")
+                ) || [];
+
+
+            const existingProduct =
+                cart.find(
+                    item => item.id === product.id
+                );
+
+
+            if (existingProduct) {
+
+                existingProduct.quantity++;
+
+            } else {
+
+                cart.push({
+
+                    id: product.id,
+
+                    name: product.name,
+
+                    price: product.price,
+
+                    quantity: 1
+
+                });
+
+            }
+
+
+            localStorage.setItem(
+                "cart",
+                JSON.stringify(cart)
+            );
+
+
+            alert(
+                product.name +
+                " added to cart!"
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>

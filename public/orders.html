@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Orders - CodeAlpha Store</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        nav {
+            background: #222;
+            color: white;
+            padding: 15px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h2 {
+            color: #ff9800;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        nav a:hover {
+            color: #ff9800;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .order-card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .status {
+            background: #ff9800;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .product {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product:last-child {
+            border-bottom: none;
+        }
+
+        .product-name {
+            font-weight: bold;
+        }
+
+        .product-details {
+            color: #666;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .date {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .message {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .login-btn {
+            display: inline-block;
+            margin-top: 15px;
+            background: #ff9800;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+
+            nav {
+                padding: 15px;
+            }
+
+            .container {
+                width: 95%;
+            }
+
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .product {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <nav>
+
+        <h2>CodeAlpha Store</h2>
+
+        <div>
+
+            <a href="products.html">Products</a>
+
+            <a href="cart.html">Cart</a>
+
+            <a href="orders.html">My Orders</a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="container">
+
+        <h1>My Orders</h1>
+
+        <div id="ordersContainer">
+
+            <p style="text-align:center;">
+                Loading orders...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // Get logged-in user
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        // Check login
+        if (!user) {
+
+            document.getElementById("ordersContainer").innerHTML = `
+
+                <div class="message">
+
+                    <h3>Please login to view your orders.</h3>
+
+                    <a href="login.html" class="login-btn">
+                        Login
+                    </a>
+
+                </div>
+
+            `;
+
+        } else {
+
+            loadOrders();
+
+        }
+
+
+        // Load orders from backend
+        async function loadOrders() {
+
+            try {
+
+                const response = await fetch(
+                    `/api/orders/${user.id}`
+                );
+
+                const orders = await response.json();
+
+                const container =
+                    document.getElementById("ordersContainer");
+
+
+                // No orders
+                if (orders.length === 0) {
+
+                    container.innerHTML = `
+
+                        <div class="message">
+
+                            <h3>You haven't placed any orders yet.</h3>
+
+                            <a href="products.html"
+                               class="login-btn">
+                                Start Shopping
+                            </a>
+
+                        </div>
+
+                    `;
+
+                    return;
+                }
+
+
+                // Group products by order
+                const groupedOrders = {};
+
+                orders.forEach(order => {
+
+                    if (!groupedOrders[order.order_id]) {
+
+                        groupedOrders[order.order_id] = {
+
+                            order_id: order.order_id,
+
+                            total_amount: order.total_amount,
+
+                            status: order.status,
+
+                            created_at: order.created_at,
+
+                            products: []
+
+                        };
+
+                    }
+
+                    groupedOrders[
+                        order.order_id
+                    ].products.push(order);
+
+                });
+
+
+                // Display orders
+                container.innerHTML = "";
+
+
+                Object.values(groupedOrders).forEach(order => {
+
+                    let productsHTML = "";
+
+
+                    order.products.forEach(product => {
+
+                        productsHTML += `
+
+                            <div class="product">
+
+                                <div>
+
+                                    <div class="product-name">
+
+                                        ${product.product_name}
+
+                                    </div>
+
+                                    <div class="product-details">
+
+                                        Quantity:
+                                        ${product.quantity}
+
+                                    </div>
+
+                                </div>
+
+                                <div>
+
+                                    ₹${product.price}
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    });
+
+
+                    const orderDate =
+                        new Date(
+                            order.created_at
+                        ).toLocaleString();
+
+
+                    container.innerHTML += `
+
+                        <div class="order-card">
+
+                            <div class="order-header">
+
+                                <div>
+
+                                    <div class="order-id">
+
+                                        Order #${order.order_id}
+
+                                    </div>
+
+                                    <div class="date">
+
+                                        ${orderDate}
+
+                                    </div>
+
+                                </div>
+
+                                <div class="status">
+
+                                    ${order.status}
+
+                                </div>
+
+                            </div>
+
+
+                            ${productsHTML}
+
+
+                            <div class="total">
+
+                                Total:
+                                ₹${order.total_amount}
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                });
+
+            } catch (error) {
+
+                console.log(error);
+
+                document.getElementById(
+                    "ordersContainer"
+                ).innerHTML = `
+
+                    <div class="message">
+
+                        <h3>
+                            Failed to load orders.
+                        </h3>
+
+                        <p>
+                            Please try again later.
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
